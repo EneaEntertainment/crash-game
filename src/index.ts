@@ -21,8 +21,8 @@ window.onload = () =>
 
     document.body.appendChild(game.app.view as HTMLCanvasElement);
 
-    button(960 - 120, 980, RES[2048]).on('pointerdown', () => { add(2048); });
-    button(960 + 120, 980, RES[4096]).on('pointerdown', () => { add(4096); });
+    button(960 - 180, 960, RES[2048]).on('pointerdown', () => { add(2048); });
+    button(960 + 180, 960, RES[4096]).on('pointerdown', () => { add(4096); });
 
     window.addEventListener('resize', () => { resize(); });
 
@@ -38,10 +38,10 @@ async function add(id: number): Promise<void>
 
     if (t === null)
     {
-        t = new Text('', { fill: 0xffffff, fontSize: 32 });
+        t = new Text('', { fill: 0xffffff, fontSize: 64 });
 
         t.anchor.set(0.5);
-        t.position.set(960, 880);
+        t.position.set(960, 820);
 
         game.app.stage.addChild(t);
     }
