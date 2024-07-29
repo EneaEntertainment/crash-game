@@ -1,4 +1,6 @@
-import { FORMATS, type Renderer } from 'pixi.js';
+import type { BaseTexture, Renderer } from 'pixi.js';
+import { FORMATS, TYPES } from 'pixi.js';
+
 import { game } from './const';
 
 export function mem(): number
@@ -8,9 +10,27 @@ export function mem(): number
     let sum = 0;
 
     for (const texture of r.texture.managedTextures)
-        sum += nextPow2(texture.realWidth) * nextPow2(texture.realHeight) * (texture.format === FORMATS.RGBA ? 4 : 0);
+        sum += nextPow2(texture.realWidth) * nextPow2(texture.realHeight) * getSize(texture);
 
     return sum;
+}
+
+function getSize(texture: BaseTexture): number
+{
+    let size = 0;
+
+    switch (texture.format)
+    {
+        case FORMATS.RGB:
+            size = texture.type === TYPES.UNSIGNED_SHORT_5_6_5 ? 2 : 3;
+            break;
+
+        case FORMATS.RGBA:
+            size = 4;
+            break;
+    }
+
+    return size;
 }
 
 function nextPow2(v: number): number

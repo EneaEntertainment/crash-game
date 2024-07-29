@@ -1,4 +1,4 @@
-import { Application, Assets, BaseTexture, MIPMAP_MODES, Text } from 'pixi.js';
+import { Application, Assets, BaseTexture, FORMATS, MIPMAP_MODES, TYPES, Text } from 'pixi.js';
 import { RES, game } from './const';
 
 import { button } from './button';
@@ -7,6 +7,11 @@ import { mem } from './mem';
 import { resize } from './resize';
 
 let t: Text | null = null;
+
+const isRGBA = true;
+
+const FORMAT = isRGBA ? FORMATS.RGBA : FORMATS.RGB;
+const TYPE = isRGBA ? TYPES.UNSIGNED_BYTE : TYPES.UNSIGNED_SHORT_5_6_5;
 
 window.onload = () =>
 {
@@ -21,8 +26,8 @@ window.onload = () =>
 
     document.body.appendChild(game.app.view as HTMLCanvasElement);
 
-    button(960 - 180, 960, RES[2048]).on('pointerdown', () => { add(2048); });
-    button(960 + 180, 960, RES[4096]).on('pointerdown', () => { add(4096); });
+    button(960 - 180, 960, isRGBA ? '32MB' : '8MB').on('pointerdown', () => { add(2048); });
+    button(960 + 180, 960, isRGBA ? '64MB' : '32MB').on('pointerdown', () => { add(4096); });
 
     window.addEventListener('resize', () => { resize(); });
 
@@ -48,7 +53,8 @@ async function add(id: number): Promise<void>
 
     game.app.renderer.render(game.app.stage);
 
-    t.text = `Total: ${(mem() / 1024 / 1024).toFixed(2)}MB`;
+    // @ts-ignore
+    t.text = `Total: ${(mem() / 1024 / 1024).toFixed(2)}MB (${game.data[id]})`;
 }
 
 async function addTexture(id: number): Promise<void>
@@ -67,7 +73,7 @@ async function addTexture(id: number): Promise<void>
 
     game.isBusy = true;
 
-    const texture = await Assets.load(`${path}${name}${index}.jpg`);
+    const texture = await Assets.load({ src: `${path}${name}${index}.jpg`, data: { format: FORMAT, type: TYPE } });
 
     game.app.stage.addChild(createSprite(texture));
 

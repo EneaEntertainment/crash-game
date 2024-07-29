@@ -1,9 +1,8 @@
 import { Sprite, Text, Texture } from 'pixi.js';
 
-import type { IRes } from './const';
 import { game } from './const';
 
-export function button(x: number, y: number, data: IRes): Sprite
+export function button(x: number, y: number, title: string): Sprite
 {
     const b = new Sprite(Texture.WHITE);
 
@@ -18,7 +17,7 @@ export function button(x: number, y: number, data: IRes): Sprite
 
     game.app.stage.addChild(b);
 
-    const t = new Text(data.title, { fill: 0xffffff, fontSize: 64 });
+    const t = new Text(title, { fill: 0xffffff, fontSize: 64 });
 
     t.anchor.set(0.5);
     t.scale.set(1 / b.scale.x, 1 / b.scale.y);
