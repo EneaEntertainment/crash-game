@@ -17,20 +17,37 @@ export function mem(): number
 
 function getSize(texture: BaseTexture): number
 {
-    let size = 0;
-
     switch (texture.format)
     {
         case FORMATS.RGB:
-            size = texture.type === TYPES.UNSIGNED_SHORT_5_6_5 ? 2 : 3;
-            break;
+            return texture.type === TYPES.UNSIGNED_SHORT_5_6_5 ? 2 : 3;
 
         case FORMATS.RGBA:
-            size = 4;
-            break;
-    }
+            switch (texture.type)
+            {
+                case TYPES.UNSIGNED_BYTE:
+                    return 4;
 
-    return size;
+                case TYPES.UNSIGNED_SHORT_4_4_4_4:
+                case TYPES.UNSIGNED_SHORT_5_5_5_1:
+                    return 2;
+
+                default:
+                    // unexpected type
+                    return 0;
+            }
+
+        case FORMATS.LUMINANCE_ALPHA:
+            return 2;
+
+        case FORMATS.LUMINANCE:
+        case FORMATS.ALPHA:
+            return 1;
+
+        default:
+            // unexpected format
+            return 0;
+    }
 }
 
 function nextPow2(v: number): number
